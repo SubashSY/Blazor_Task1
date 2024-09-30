@@ -1,0 +1,52 @@
+﻿@page "/todolist"
+
+<h3>To-Do List</h3>
+
+<div>
+    <input type="text" @bind="newTodo" placeholder="Enter a new to-do item" />
+    <button @onclick="AddTodo">Add</button>
+</div>
+
+<ul>
+    @foreach (var todo in todos)
+    {
+        <li>
+            <input type="checkbox" @bind="todo.IsCompleted" />
+            <span style="text-decoration: @(todo.IsCompleted ? "line-through" : "none")">
+                @todo.Task
+            </span>
+            <button @onclick="() => DeleteTodo(todo)">Delete</button>
+        </li>
+    }
+</ul>
+
+@code {
+    // Holds the new to-do item
+    private string newTodo = string.Empty;
+
+    // List of to-do items
+    private List<TodoItem> todos = new List<TodoItem>();
+
+    // Class to represent each to-do item
+    public class TodoItem
+    {
+        public string Task { get; set; }
+        public bool IsCompleted { get; set; }
+    }
+
+    // Method to add a new to-do item
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            todos.Add(new TodoItem { Task = newTodo });
+            newTodo = string.Empty; // Clear the input field after adding
+        }
+    }
+
+    // Method to delete a to-do item
+    private void DeleteTodo(TodoItem todo)
+    {
+        todos.Remove(todo);
+    }
+}
